@@ -6,7 +6,7 @@ import {
 	WebSocketServer,
 } from '@nestjs/websockets'
 import {Server, Socket} from 'socket.io'
-import {CanvasDrawing} from './types'
+import {DrawToServer} from './types'
 
 @WebSocketGateway({namespace: '/canvas', cors: true})
 export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -21,22 +21,22 @@ export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	handleDisconnect(client: Socket) {}
 
 	@SubscribeMessage('drawToServer')
-	handleDraw(client: Socket, drawing: CanvasDrawing) {
-		client.broadcast.emit('drawToClient', drawing)
+	handleDraw(client: Socket, {roomId, drawing}: DrawToServer) {
+		client.broadcast.to(roomId).emit('drawToClient', drawing)
 	}
 
 	@SubscribeMessage('undoToServer')
-	handleUndo(client: Socket) {
-		client.broadcast.emit('undoToClient')
+	handleUndo(client: Socket, room: string) {
+		client.broadcast.to(room).emit('undoToClient')
 	}
 
 	@SubscribeMessage('redoToServer')
-	handleRedo(client: Socket) {
-		client.broadcast.emit('redoToClient')
+	handleRedo(client: Socket, room: string) {
+		client.broadcast.to(room).emit('redoToClient')
 	}
 
 	@SubscribeMessage('resetToServer')
-	handleReset(client: Socket) {
-		client.broadcast.emit('resetToClient')
+	handleReset(client: Socket, room: string) {
+		client.broadcast.to(room).emit('resetToClient')
 	}
 }

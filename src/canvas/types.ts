@@ -10,3 +10,8 @@ export interface CanvasDrawing {
 	thickness: CanvasThickness
 	color: string
 }
+
+export interface DrawToServer {
+	roomId: string
+	drawing: CanvasDrawing
+}
