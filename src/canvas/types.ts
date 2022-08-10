@@ -11,7 +11,14 @@ export interface CanvasDrawing {
 	color: string
 }
 
+export type CanvasAction = CanvasDrawing | 'reset'
+
 export interface DrawToServer {
 	roomId: string
 	drawing: CanvasDrawing
+}
+
+export interface Room {
+	undoList: CanvasAction[]
+	redoList: CanvasAction[]
 }
